@@ -9,7 +9,7 @@ export class UserController {
     public userRepository: UserRepository,
   ) {}
 
-  @post('/users', {
+  @post('/api/v1/users', {
     responses: {
       '200': {
         description: 'User model instance',
@@ -29,10 +29,14 @@ export class UserController {
     })
     user: User,
   ): Promise<User> {
-    return this.userRepository.create(user);
+    const userCount = await this.userRepository.count();
+    return this.userRepository.create({
+      _id: `${userCount.count}`,
+      createdOn: user.createdOn,
+    });
   }
 
-  @get('/users', {
+  @get('/api/v1/users', {
     responses: {
       '200': {
         description: 'Array of User model instances',

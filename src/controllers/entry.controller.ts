@@ -11,7 +11,7 @@ export class EntryController {
     private userRepository: UserRepository,
   ) {}
 
-  @post('/entries', {
+  @post('/api/v1/entries', {
     responses: {
       '200': {
         description: 'Entry model instance',
@@ -31,13 +31,10 @@ export class EntryController {
     })
     entry: Entry,
   ): Promise<Entry> {
-    // error suppressed to alow use of MongoDB extended operators
-    // @ts-ignore
-    await this.userRepository.updateById(entry.userId, {$inc: {entrycount: 1}});
     return this.entryRepository.create(entry);
   }
 
-  @get('/entries', {
+  @get('/api/v1/entries', {
     responses: {
       '200': {
         description: 'Array of Entry model instances',
@@ -56,7 +53,7 @@ export class EntryController {
     return this.entryRepository.find(filter);
   }
 
-  @get('/entries/{id}', {
+  @get('/api/v1/entries/{userid}', {
     responses: {
       '200': {
         description: 'Entry model instance',
@@ -69,10 +66,10 @@ export class EntryController {
     },
   })
   async findById(
-    @param.path.string('id') id: string,
+    @param.path.string('userid') userId: string,
     @param.filter(Entry, {exclude: 'where'})
     filter?: FilterExcludingWhere<Entry>,
-  ): Promise<Entry> {
-    return this.entryRepository.findById(id, filter);
+  ): Promise<any> {
+    return this.entryRepository.find({where: {userId: userId}});
   }
 }

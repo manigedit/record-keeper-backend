@@ -10,11 +10,10 @@ export class User extends Entity {
   _id?: string;
 
   @property({
-    type: 'number',
-    required: false,
-    default: 0,
+    type: 'date',
+    required: true,
   })
-  entrycount?: number;
+  createdOn: string;
 
   constructor(data?: Partial<User>) {
     super(data);
